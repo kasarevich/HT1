@@ -66,8 +66,14 @@ public class DBWorker {
 		Connection connect;
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/phonebook?user=root&password=root&useUnicode=true&characterEncoding=UTF-8&characterSetResults=utf8&connectionCollation=utf8_general_ci");
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/phonebook?" +
+					"user=root&password=root" +
+					"&useUnicode=true" +
+					"&characterEncoding=UTF-8" +
+					"&characterSetResults=utf8&" +
+					"connectionCollation=utf8_general_ci&"+
+					"useJDBCCompliantTimezoneShift=true&" +
+					"useLegacyDatetimeCode=false&serverTimezone=UTC");
 			statement = connect.createStatement();
 			this.affected_rows = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 		
@@ -79,7 +85,7 @@ public class DBWorker {
 			
 			return this.affected_rows;
 		}
-		catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e)
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}

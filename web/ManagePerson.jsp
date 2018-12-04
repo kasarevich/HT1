@@ -15,6 +15,8 @@
 	HashMap<String,String> jsp_parameters = new HashMap<String,String>();
 	Person person = new Person();
 	String error_message = "";
+	/*режим вывода таблицы на экран(показывать номера, или нет)*/
+	String action_mode = "";
 
 	if (request.getAttribute("jsp_parameters") != null)
 	{
@@ -25,8 +27,9 @@
 	{
 		person=(Person)request.getAttribute("person");
 	}
-	
+
 	error_message = jsp_parameters.get("error_message");
+	action_mode = jsp_parameters.get("current_action");
 %>
 
 <form action="<%=request.getContextPath()%>/" method="post">
@@ -51,28 +54,48 @@
     </tr>
     <tr>
         <td>Имя:</td>
-		<td><input type="text" name="name" value="<%=person.getName()%>"/></td>        
+		<td><input type="text" name="name" value="<%=person.getName()%>"/></td>
     </tr>
     <tr>
         <td>Отчество:</td>
         <td><input type="text" name="middlename" value="<%=person.getMiddlename()%>"/></td>
     </tr>
+
+    <%--Если добавляется запись, номера не будут показаны--%>
+    <%
+        if (!action_mode.equals("add"))
+        {
+    %>
+
     <tr>
         <td>Телефоны:</td>
         <td>
-         <textarea name="phones" cols="40" rows="5"><%
-          for(String phone : person.getPhones().values())
+            <table border="0">
+            <%
+          for(HashMap.Entry<String, String> phone : person.getPhones().entrySet())
            {
-         	out.write(phone + "\n");
+               out.write("<tr><td>" + phone.getValue() + "</td>"
+                       + "<td><a href='" + request.getContextPath() + "/?action=editNumber&id=" + person.getId() +"&phoneID=" + phone.getKey() +"'>Редактировать</a></td>"
+                       + "<td><a href='" + request.getContextPath() + "/?action=deleteNumber&id=" + person.getId() +"&phoneID=" + phone.getKey() +"'>Удалить</a></td>");
            }
-         %></textarea>
+            %>
+                <tr>
+                    <td>
+                        <a href="<%=request.getContextPath()%>/?action=addNumber&phoneID=0&id=<%=person.getId()%>">Добавить</a>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
+    <%
+        }
+    %>
     <tr>
         <td colspan="2" align="center">
-         <input type="submit" name="<%=jsp_parameters.get("next_action")%>" value="<%=jsp_parameters.get("next_action_label")%>" />
+         <input type="submit" name="<%=jsp_parameters.get("next_action")%>" value="<%=jsp_parameters.get("next_action_label")%>" /> <br />
+         <a href="<%=request.getContextPath()%>/">Вернуться к списку</a>
         </td>
-    </tr> 
+    </tr>
  </table>
  </form>
 </body>

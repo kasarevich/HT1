@@ -12,10 +12,10 @@
         <servlet-name>ManagePersonServlet</servlet-name>
         <servlet-class>app.ManagePersonServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ManagePersonServlet</servlet-name>
         <url-pattern>/ManagePerson/</url-pattern>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
 </web-app>
